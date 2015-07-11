@@ -1,25 +1,30 @@
 {
-  "name": "hubot-simple-xmpp",
-  "version": "0.0.2",
-  "author": "Abo(https://github.com/abo)",
-  "description": "XMPP adapter for Hubot.",
-  "keywords": ["hubot", "xmpp", "adapter"],
-  "licenses": [{
-    "type": "MIT"
+  "name": "hubot-single-user-xmpp",
+  "version": "1.0.0",
+  "author": "Black Roland (https://github.com/black-roland)",
+  "contributors": [{
+    "name": "Abo",
+    "url": "https://github.com/abo"
   }],
+  "description": "Hubot XMPP adapter for single user",
+  "keywords": [
+    "hubot",
+    "xmpp",
+    "adapter"
+  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/abo/hubot-simple-xmpp.git"
+    "url": "git://github.com/black-roland/hubot-single-user-xmpp"
   },
-  "bugs": {
-    "url": "http://github.com/abo/hubot-simple-xmpp/issues"
-  },
-  "main": "./src/hubot-simple-xmpp.coffee",
+  "main": "src/hubot-single-user-xmpp.coffee",
   "dependencies": {
-    "simple-xmpp": ">=0.1.12"
+    "simple-xmpp": "^0.1.92"
+  },
+  "peerDependencies": {
+    "hubot": ">=2.13.2"
   },
   "devDependencies": {
-    "coffee-script": "1.6.3",
-    "hubot": ">=2.4.1"
+    "coffee-script": "^1.9.3"
   }
 }
