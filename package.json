@@ -8,7 +8,7 @@
       "url": "https://github.com/abo"
     }
   ],
-  "description": "Hubot XMPP adapter for single user",
+  "description": "Hubot XMPP adapter for single user usage",
   "keywords": [
     "hubot",
     "xmpp",
