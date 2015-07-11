@@ -2,7 +2,7 @@ try
   { Adapter, TextMessage, User } = require 'hubot'
 catch
   prequire = require 'parent-require'
-  { Robot, Adapter, TextMessage, User } = prequire 'hubot'
+  { Adapter, TextMessage, User } = prequire 'hubot'
 
 xmpp = require 'simple-xmpp'
 
@@ -10,9 +10,11 @@ class XMPPAdapter extends Adapter
 
   constructor: (robot) ->
     @robot = robot
+    @admin = process.env.HUBOT_XMPP_ADMIN_JID
+    @xmpp = xmpp
 
   send: (envelope, messages...) ->
-    xmpp.send envelope.user.jid, "#{str}" for str in messages
+    @xmpp.send envelope.user.jid, "#{str}" for str in messages
 
   emote: (envelope, messages...) ->
     @send envelope, "* #{str}" for str in messages
@@ -22,9 +24,8 @@ class XMPPAdapter extends Adapter
 
   online: () =>
     @robot.logger.info 'Hubot online, ready to go!'
-    if process.env.HUBOT_XMPP_ADMIN_JID
-      xmpp.subscribe process.env.HUBOT_XMPP_ADMIN_JID
     @emit 'connected'
+    @xmpp.subscribe @admin
 
   chat: (from, message) =>
     @robot.logger.debug "Received message: #{message} from: #{from}"
@@ -35,10 +36,12 @@ class XMPPAdapter extends Adapter
     @receive message
 
   run: ->
-    xmpp.on 'online', @online
-    xmpp.on 'chat', @chat
+    return @robot.logger.error 'Undefined HUBOT_XMPP_ADMIN_JID' unless @admin
 
-    xmpp.connect
+    @xmpp.on 'online', @online
+    @xmpp.on 'chat', @chat
+
+    @xmpp.connect
       jid:  process.env.HUBOT_XMPP_USERNAME
       password: process.env.HUBOT_XMPP_PASSWORD
       host: process.env.HUBOT_XMPP_HOST
