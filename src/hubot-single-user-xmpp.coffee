@@ -1,45 +1,48 @@
-Readline = require 'readline'
+try
+  { Adapter, TextMessage, User } = require 'hubot'
+catch
+  prequire = require 'parent-require'
+  { Robot, Adapter, TextMessage, User } = prequire 'hubot'
 
-Robot = require("hubot").Robot
-Adapter = require("hubot").Adapter
-TextMessage = require("hubot").TextMessage
-
-xmpp = require("simple-xmpp")
+xmpp = require 'simple-xmpp'
 
 class XMPPAdapter extends Adapter
 
-  send: (envelope, strings...) ->
-    xmpp.send (envelope.user || envelope),"#{str}" for str in strings
+  constructor: (robot) ->
+    @robot = robot
 
-  emote: (envelope, strings...) ->
-    @send envelope, "* #{str}" for str in strings
+  send: (envelope, messages...) ->
+    xmpp.send envelope.user.jid, "#{str}" for str in messages
 
-  reply: (envelope, strings...) ->
-    strings = strings.map (s) -> "#{s}"
-    @send envelope, strings...
+  emote: (envelope, messages...) ->
+    @send envelope, "* #{str}" for str in messages
+
+  reply: (envelope, messages...) ->
+    @send envelope, messages
+
+  online: () =>
+    @robot.logger.info 'Hubot online, ready to go!'
+    if process.env.HUBOT_XMPP_ADMIN_JID
+      xmpp.subscribe process.env.HUBOT_XMPP_ADMIN_JID
+    @emit 'connected'
+
+  chat: (from, message) =>
+    @robot.logger.debug "Received message: #{message} from: #{from}"
+    user = new User from,
+      jid: from
+      room: from
+    message = new TextMessage(user, message)
+    @receive message
 
   run: ->
-    self = @
-
-    xmpp.on 'online', () =>
-      @robot.logger.info 'hubot online, ready to go!'
-      if process.env.HUBOT_XMPP_ADMIN_JID
-        xmpp.subscribe process.env.HUBOT_XMPP_ADMIN_JID
-        # xmpp.send process.env.HUBOT_XMPP_ADMIN_JID, "I'm ready!"
-
-    xmpp.on 'chat', (from, message) =>
-      @robot.logger.debug "message received,#{from}: #{message}"
-      @receive new TextMessage from, message , 'messageId'
+    xmpp.on 'online', @online
+    xmpp.on 'chat', @chat
 
     xmpp.connect
-      jid:  process.env.HUBOT_XMPP_USERNAME,
-      password: process.env.HUBOT_XMPP_PASSWORD,
-      host: process.env.HUBOT_XMPP_HOST,
+      jid:  process.env.HUBOT_XMPP_USERNAME
+      password: process.env.HUBOT_XMPP_PASSWORD
+      host: process.env.HUBOT_XMPP_HOST
       port: process.env.HUBOT_XMPP_PORT or 5222
 
-    xmpp.getRoster
-
-    self.emit 'connected'
-
-exports.use = (robot) ->
+module.exports.use = (robot) ->
   new XMPPAdapter robot

@@ -2,10 +2,12 @@
   "name": "hubot-single-user-xmpp",
   "version": "1.0.0",
   "author": "Black Roland (https://github.com/black-roland)",
-  "contributors": [{
-    "name": "Abo",
-    "url": "https://github.com/abo"
-  }],
+  "contributors": [
+    {
+      "name": "Abo",
+      "url": "https://github.com/abo"
+    }
+  ],
   "description": "Hubot XMPP adapter for single user",
   "keywords": [
     "hubot",
@@ -19,12 +21,13 @@
   },
   "main": "src/hubot-single-user-xmpp.coffee",
   "dependencies": {
+    "parent-require": "^1.0.0",
     "simple-xmpp": "^0.1.92"
   },
-  "peerDependencies": {
-    "hubot": ">=2.13.2"
-  },
   "devDependencies": {
-    "coffee-script": ">=1.6.3"
+    "coffee-script": ">=1.2.0"
+  },
+  "peerDependencies": {
+    "hubot": ">=2.0"
   }
 }
