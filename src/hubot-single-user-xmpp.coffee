@@ -13,13 +13,13 @@ class XMPPAdapter extends Adapter
     @admin = process.env.HUBOT_XMPP_ADMIN_JID
     @xmpp = xmpp
 
-  send: (envelope, messages...) ->
+  send: (envelope, messages...) =>
     @xmpp.send envelope.user.jid, "#{str}" for str in messages
 
-  emote: (envelope, messages...) ->
+  emote: (envelope, messages...) =>
     @send envelope, "* #{str}" for str in messages
 
-  reply: (envelope, messages...) ->
+  reply: (envelope, messages...) =>
     @send envelope, messages
 
   online: () =>
@@ -38,11 +38,16 @@ class XMPPAdapter extends Adapter
     message = new TextMessage(user, message)
     @receive message
 
-  run: ->
+  subscribe: (from) =>
+    @robot.logger.debug "Accepting subscription from #{from}"
+    @xmpp.acceptSubscription from if from == @admin
+
+  run: =>
     return @robot.logger.error 'Undefined HUBOT_XMPP_ADMIN_JID' unless @admin
 
     @xmpp.on 'online', @online
     @xmpp.on 'chat', @chat
+    @xmpp.on 'subscribe', @subscribe
 
     @xmpp.connect
       jid:  process.env.HUBOT_XMPP_USERNAME
