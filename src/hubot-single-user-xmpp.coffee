@@ -29,6 +29,9 @@ class XMPPAdapter extends Adapter
 
   chat: (from, message) =>
     @robot.logger.debug "Received message: #{message} from: #{from}"
+    # ignore messages not from admin
+    return @robot.logger.debug "Ignoring message" unless from == @admin
+
     user = new User from,
       jid: from
       room: from
