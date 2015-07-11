@@ -35,7 +35,15 @@ class XMPPAdapter extends Adapter
     user = new User from,
       jid: from
       room: from
+
+    # remove Hubot name from message
+    message = message.replace new RegExp("^#{ process.env.HUBOT_NAME or 'Hubot' } ", 'i')
+    message = message.replace new RegExp("^#{ process.env.HUBOT_ALIAS } ", 'i') if process.env.HUBOT_ALIAS
+    # prefix all messages with hubot name
+    message = "#{ process.env.HUBOT_NAME or 'Hubot' } #{ message }"
+
     message = new TextMessage(user, message)
+
     @receive message
 
   subscribe: (from) =>
