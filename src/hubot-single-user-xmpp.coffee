@@ -32,10 +32,10 @@ class XMPPAdapter extends Adapter
       @receive new TextMessage from, message , 'messageId'
 
     xmpp.connect
-      jid:  process.env.HUBOT_XMPP_JID,
-      password: process.env.HUBOT_XMPP_PWD,
+      jid:  process.env.HUBOT_XMPP_USERNAME,
+      password: process.env.HUBOT_XMPP_PASSWORD,
       host: process.env.HUBOT_XMPP_HOST,
-      port: process.env.HUBOT_XMPP_PORT || 5222
+      port: process.env.HUBOT_XMPP_PORT or 5222
 
     xmpp.getRoster
 
@@ -43,4 +43,3 @@ class XMPPAdapter extends Adapter
 
 exports.use = (robot) ->
   new XMPPAdapter robot
-
