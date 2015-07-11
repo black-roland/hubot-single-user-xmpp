@@ -25,6 +25,6 @@
     "hubot": ">=2.13.2"
   },
   "devDependencies": {
-    "coffee-script": "^1.9.3"
+    "coffee-script": ">=1.6.3"
   }
 }
