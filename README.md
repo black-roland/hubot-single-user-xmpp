@@ -1,27 +1,20 @@
-hubot-simple-xmpp
-=================
+# [hubot-single-user-xmpp](https://github.com/black-roland/hubot-single-user-xmpp)
 
-Connects Hubot to XMPP
+Hubot XMPP adapter for single-user usage.
 
-### Setup
+## Features
+* The ability to chat without prefixing all messages with Hubot name or alias.
+* Filtering. Allowed only messages from the administrator JID (`HUBOT_XMPP_ADMIN_JID`).
+* Substitute room JID with administrator JID.
 
-Install dependencies with `npm`
+## Configuration
 
-	npm install
+`HUBOT_XMPP_USERNAME` — Hubot JID. Ex.: `hubot@github.com`
 
-### Configuration
+`HUBOT_XMPP_PASSWORD` — Account password.
 
+`HUBOT_XMPP_HOST` — The host name you want to connect to if its different than what is in the username JID.
 
-* `HUBOT_XMPP_JID` The host jid you want to connect to.
-* `HUBOT_XMPP_PWD` The password of jid
-* `HUBOT_XMPP_HOST` The host name you want to connect to if its different than
-  what is in the username jid.
-* `HUBOT_XMPP_PORT` The port to connect to on the jabber server.
+`HUBOT_XMPP_PORT` — The port to connect to on the Jabber server (optional, default 5222).
 
-* `HUBOT_XMPP_ADMIN_JID` The admin jid you want to connect to.
-
-
-### Installation
-
-you should modify the `package.json` and add the`hubot-simple-xmpp` dependency. 
-After running `npm install` you should be ready to configure and start up your bot.
+`HUBOT_XMPP_ADMIN_JID` — Administrator (single-user) JID.
