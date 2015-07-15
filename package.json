@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "author": "Black Roland (https://github.com/black-roland)",
   "contributors": [
-    {
-      "name": "Abo",
-      "url": "https://github.com/abo"
-    }
+    "Abo (https://github.com/abo)"
   ],
   "description": "Hubot XMPP adapter for single user usage",
   "keywords": [
