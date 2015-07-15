@@ -1,11 +1,11 @@
 {
   "name": "hubot-single-user-xmpp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Black Roland (https://github.com/black-roland)",
   "contributors": [
     "Abo (https://github.com/abo)"
   ],
-  "description": "Hubot XMPP adapter for single user usage",
+  "description": "Hubot XMPP adapter for single-user usage",
   "keywords": [
     "hubot",
     "xmpp",
