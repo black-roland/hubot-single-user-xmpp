@@ -50,12 +50,16 @@ class XMPPAdapter extends Adapter
     @robot.logger.debug "Accepting subscription from #{from}"
     @xmpp.acceptSubscription from if from == @admin
 
+  error: (err) =>
+    @robot.logger.error err
+
   run: =>
     return @robot.logger.error 'Undefined HUBOT_XMPP_ADMIN_JID' unless @admin
 
     @xmpp.on 'online', @online
     @xmpp.on 'chat', @chat
     @xmpp.on 'subscribe', @subscribe
+    @xmpp.on 'error', @error
 
     @xmpp.connect
       jid:  process.env.HUBOT_XMPP_USERNAME
