@@ -8,6 +8,8 @@ xmpp = require 'simple-xmpp'
 
 class XMPPAdapter extends Adapter
 
+  reconnectInterval: 30000
+
   constructor: (robot) ->
     @robot = robot
     @admin = process.env.HUBOT_XMPP_ADMIN_JID
@@ -24,7 +26,12 @@ class XMPPAdapter extends Adapter
 
   online: () =>
     @robot.logger.info 'Hubot online, ready to go!'
-    @emit 'connected'
+
+    @emit if @connected then 'reconnected' else 'connected'
+    @connected = true
+    clearInterval @reconnectTimer if @reconnectTimer
+    @reconnectTimer = false
+
     @xmpp.subscribe @admin
 
   chat: (from, message) =>
@@ -51,11 +58,27 @@ class XMPPAdapter extends Adapter
     @xmpp.acceptSubscription from if from == @admin
 
   error: (err) =>
-    @robot.logger.error err
+    @robot.logger.error 'XMPP error', err
 
-  run: =>
-    return @robot.logger.error 'Undefined HUBOT_XMPP_ADMIN_JID' unless @admin
+  reconnect: () =>
+    return if @reconnectTimer
 
+    @robot.logger.info 'Connection lost'
+
+    @reconnectTimer = setInterval () =>
+      @robot.logger.info 'Reconnecting...'
+
+      @xmpp.removeListener 'online', @online
+      @xmpp.removeListener 'chat', @chat
+      @xmpp.removeListener 'subscribe', @subscribe
+      @xmpp.removeListener 'error', @error
+      @xmpp.conn.removeListener 'end', @reconnect
+
+      @connect()
+
+    , @reconnectInterval
+
+  connect: () =>
     @xmpp.on 'online', @online
     @xmpp.on 'chat', @chat
     @xmpp.on 'subscribe', @subscribe
@@ -66,6 +89,13 @@ class XMPPAdapter extends Adapter
       password: process.env.HUBOT_XMPP_PASSWORD
       host: process.env.HUBOT_XMPP_HOST
       port: process.env.HUBOT_XMPP_PORT or 5222
+
+    @xmpp.conn.on 'end', @reconnect
+
+  run: =>
+    return @robot.logger.error 'Undefined HUBOT_XMPP_ADMIN_JID' unless @admin
+
+    @connect()
 
 module.exports.use = (robot) ->
   new XMPPAdapter robot
