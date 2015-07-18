@@ -16,7 +16,7 @@ class XMPPAdapter extends Adapter
     @xmpp = xmpp
 
   send: (envelope, messages...) =>
-    @xmpp.send envelope.user.jid, "#{str}" for str in messages
+    @xmpp.send envelope.room or envelope.user.jid, "#{str}" for str in messages
 
   emote: (envelope, messages...) =>
     @send envelope, "* #{str}" for str in messages
